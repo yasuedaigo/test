@@ -1,4 +1,6 @@
-package job;
+package main.job;
+
+import main.tactics.*;
 
 // プレイヤー：忍者
 //麻痺の影響をうけない
@@ -20,14 +22,14 @@ public class Ninja extends Player {
 	 * 名前(name)からキャラクターに必要なパラメータを生成する
 	 */
 	@Override
-	protected void MakeCharacter()
+	protected void makeCharacter()
 	{
 		// 忍者のパラメータを名前から生成する
-		this.hp = GetNumber(0, 100)+100;   //100~200
-		this.str = GetNumber(1, 50)+20;      //20~70
-		this.def = GetNumber(2, 70)+20;          //20~70
-		this.luck = GetNumber(3,99)+1;       //1~100
-		this.agi = GetNumber(4,40)+40;        //40~80
+		this.hp = getNumber(0, 100)+100;   //100~200
+		this.str = getNumber(1, 50)+20;      //20~70
+		this.def = getNumber(2, 70)+20;          //20~70
+		this.luck = getNumber(3,99)+1;       //1~100
+		this.agi = getNumber(4,40)+40;        //40~80
 		this.type = "忍者";
 		this.abnormality = "";
 	}
@@ -37,35 +39,41 @@ public class Ninja extends Player {
 	 * @param defender : 対象プレイヤー
 	 */
 	@Override
-	public void Attack(Player defender,int turnNumber)
+	public void attack(Player defender,int turnNumber)
 	{
         // 与えるダメージを求める
 		//最初のターンのみ相手の防御無視の攻撃をする
 		//戦士に攻撃したときのみ相手のDEFを半分にしてダメージ計算する
-        System.out.println(GetName() + "の攻撃！");
+        System.out.println(getName() + "の攻撃！");
         int damage;
         if(turnNumber == 1){
-        	damage = GetSTR();
-        }else if(defender.GetTYPE() == "戦士"){
-        	int stockDEF = defender.GetDEF();
-        	defender.SetDEF(defender.GetDEF()/2);
-            damage = CalcDamage(defender);
-            defender.SetDEF(stockDEF);
+        	damage = getSTR();
+        }else if(defender.getType() == "戦士"){
+        	int stockDEF = defender.getDEF();
+        	defender.setDEF(defender.getDEF()/2);
+            damage = calcDamage(defender);
+            defender.setDEF(stockDEF);
         }else{
-        	damage = CalcDamage(defender);
+        	damage = calcDamage(defender);
         }
 
 
         // 求めたダメージを対象プレイヤーに与える
-        System.out.print(defender.GetName() + "に" + damage + "のダメージ！       "+"HP:"+defender.GetHP()+" → ");
-        defender.Damage(damage);
-        System.out.println(defender.GetHP());
+        System.out.print(defender.getName() + "に" + damage + "のダメージ！       "+"HP:"+defender.getHP()+" → ");
+        defender.damage(damage);
+        System.out.println(defender.getHP());
 
         // 倒れた判定
-        if (defender.GetHP() <= 0) {
-            System.out.println(defender.GetName() + "は力尽きた...");
+        if (defender.getHP() <= 0) {
+            System.out.println(defender.getName() + "は力尽きた...");
 
         }
+	}
+	
+	@Override
+	public Tactics targetLogic(){
+		Tactics ai = new NinjaTactics();
+		return ai;
 	}
 
 }

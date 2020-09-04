@@ -1,7 +1,9 @@
-package game;
-import java.util.ArrayList;
+package main.game;
 
-import job.Player;
+import java.util.ArrayList;
+import main.job.Player;
+
+
 public class Party {
 // =======================
 // フィールド変数
@@ -10,7 +12,7 @@ private ArrayList<Player> members;
 // =======================
 // コンストラクタ
 // =======================
-Party() {
+public Party() {
  members = new ArrayList<Player>();
 }
 // =======================
@@ -19,11 +21,11 @@ Party() {
 /**
 * パーティーメンバーを ArrayList で取得する
 */
-public ArrayList<Player> GetMembers() {
+public ArrayList<Player> getMembers() {
 return members;
 }
 
-public Player GetPlayer(int i) {
+public Player getPlayer(int i) {
 	return members.get(i);
 }
 
@@ -31,13 +33,13 @@ public Player GetPlayer(int i) {
 * パーティーにプレイヤーを追加する
 * @param player : 追加するプレイヤー
 */
-public void AppendPlayer(Player player) {
+public void appendPlayer(Player player) {
      members.add(player);
 }
 /**
 * パーティーからプレイヤーを離脱させる
 * @param player : 離脱させるプレイヤー
 */
-public void RemovePlayer(Player player) {
+public void removePlayer(Player player) {
 }
 }

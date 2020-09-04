@@ -1,7 +1,9 @@
-package job;
+package main.job;
+
 import java.math.BigInteger;
 import java.util.Random;
 import java.security.MessageDigest;
+import main.tactics.*;
 
 // プレイヤークラス(各種ジョブの基底クラス)
 public class Player {
@@ -40,7 +42,7 @@ public class Player {
 		this.name = name;
 
 		// キャラクターのパラメータ生成
-		MakeCharacter();
+		makeCharacter();
 	}
 
 
@@ -51,16 +53,17 @@ public class Player {
 	 * プレイヤー名を取得する
 	 * @return プレイヤー名
 	 */
-	public String GetName()
+	public String getName()
 	{
 		return this.name;
 	}
+	
 
 	/**
 	 * 現在HPを取得する
 	 * @return 現在HP
 	 */
-	public int GetHP()
+	public int getHP()
 	{
 		return this.hp;
 	}
@@ -69,7 +72,7 @@ public class Player {
 	 * 攻撃力を取得する
 	 * @return 攻撃力
 	 */
-	public int GetSTR()
+	public int getSTR()
 	{
 		return this.str;
 	}
@@ -78,53 +81,54 @@ public class Player {
 	 * 防御力を取得する
 	 * @return 防御力
 	 */
-	public int GetDEF()
+	public int getDEF()
 	{
 		return this.def;
 	}
 
-	public int GetLUCK()
+	public int getLUCK()
 	{
 		return this.luck;
 	}
 
-	public int  GetAGI()
+	public int  getAGI()
 	{
 		return this.agi;
 	}
 
-	public String GetTYPE()
+	public String getType()
 	{
 		return this.type;
 	}
 
-	public String GetABNORMALITY()
+	public String getAbnormality()
 	{
 		return this.abnormality;
 	}
 
-	public int GetTEAM()
+	public int getTeam()
 	{
 		return this.team;
 	}
+	
 
-	public void SetTEAM(int x){
+	public void setTeam(int x){
 		this.team = x;
 	}
 
-	public void SetDEF(int y){
+	public void setDEF(int y){
 		this.def = y;
 	}
 
-	public void SetSTR(int y){
+	public void setSTR(int y){
 		this.str = y;
 	}
 
-	public void SetLUCK(int y){
+	public void setLUCK(int y){
 		this.luck = y;
 	}
 
-	public void SetAGI(int y){
+	public void setAGI(int y){
 		this.agi = y;
 	}
 	// =======================
@@ -133,7 +137,7 @@ public class Player {
 	/**
 	 * 名前(name)からキャラクターに必要なパラメータを生成する
 	 */
-	protected void MakeCharacter()
+	protected void makeCharacter()
 	{
 		// ジョブごとにオーバーライドして処理を記述してください
 	}
@@ -144,7 +148,7 @@ public class Player {
 	 * @param max : 最大値(内部的に0～255の値を生成するが、0～maxまでの値に補正)
 	 * @return 数値(0～max) ※maxも含む
 	 */
-	protected int GetNumber(int index, int max) {
+	protected int getNumber(int index, int max) {
 		try {
 			// 名前からハッシュ値を生成する
 			byte[] result = MessageDigest.getInstance("SHA-1").digest(this.name.getBytes());
@@ -166,17 +170,17 @@ public class Player {
 	/**
 	 * 現在のステータスを System.out で表示する
 	 */
-	public void PrintStatus()
+	public void printStatus()
 	{
-		System.out.println(this.GetName()+"  HP="+this.GetHP()+"  STR="+this.GetSTR()+"  DEF"+this.GetDEF()+"  "+this.GetABNORMALITY());
-		System.out.println("agi="+GetAGI()+"     team"+GetTEAM());
+		System.out.println(this.getName()+"  HP="+this.getHP()+"  STR="+this.getSTR()+"  DEF"+this.getDEF()+"  "+this.getAbnormality());
+		System.out.println("agi="+getAGI()+"     team"+getTeam());
 	}
 
 	/**
 	 * 対象プレイヤーに攻撃を行う
 	 * @param defender : 対象プレイヤー
 	 */
-	public void Attack(Player defender,int turnNumber)
+	public void attack(Player defender,int turnNumber)
 	{
 		// ジョブごとにオーバーライドして処理を記述してください
 	}
@@ -186,14 +190,14 @@ public class Player {
      * @param target : 対象プレイヤー
      * @return ダメージ値(0～)
      */
-    protected int CalcDamage(Player target)
+    protected int calcDamage(Player target)
     {
     	Random r = new Random();
-    	if(GetLUCK() <= r.nextInt(101)){
-    		int damage = GetSTR();
+    	if(getLUCK() <= r.nextInt(101)){
+    		int damage = getSTR();
     		return damage;
     	}
-        int damage = GetSTR() - target.GetDEF();
+        int damage = getSTR() - target.getDEF();
         if (damage < 0)
         {
                damage = 0;
@@ -205,9 +209,14 @@ public class Player {
      * ダメージを受ける
      * @param damage : ダメージ値
      */
-    public void Damage(int damage)
+    public void damage(int damage)
     {
         // ダメージ値分、HPを減少させる
-        this.hp = Math.max(this.GetHP() - damage, 0);
+        this.hp = Math.max(this.getHP() - damage, 0);
+    }
+    
+    public Tactics targetLogic(){
+    	Tactics ai = new FighterTactics();
+    	return ai;
     }
 }
